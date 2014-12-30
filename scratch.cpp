@@ -14,6 +14,13 @@ HINSTANCE g_hinst;                          /* This application's HINSTANCE */
 HWND g_hwndChild;                           /* Optional child window */
 HWND g_hwndChild2;
 
+void OnActivate(HWND hwnd, UINT state, HWND hwndActDeact, BOOL fMinimized)
+{
+    if (state != WA_INACTIVE && !fMinimized) {
+        SetFocus(g_hwndChild);
+    }
+}
+
 /*
  *  OnSize
  *      If we have an inner child, resize it to fit.
@@ -102,6 +109,7 @@ WndProc(HWND hwnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 
     HANDLE_MSG(hwnd, WM_CREATE, OnCreate);
     HANDLE_MSG(hwnd, WM_SIZE, OnSize);
+    HANDLE_MSG(hwnd, WM_ACTIVATE, OnActivate);
     HANDLE_MSG(hwnd, WM_DESTROY, OnDestroy);
     HANDLE_MSG(hwnd, WM_PAINT, OnPaint);
     case WM_PRINTCLIENT: OnPrintClient(hwnd, (HDC)wParam); return 0;
