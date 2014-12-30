@@ -12,6 +12,7 @@
 
 HINSTANCE g_hinst;                          /* This application's HINSTANCE */
 HWND g_hwndChild;                           /* Optional child window */
+HWND g_hwndChild2;
 
 /*
  *  OnSize
@@ -20,9 +21,6 @@ HWND g_hwndChild;                           /* Optional child window */
 void
 OnSize(HWND hwnd, UINT state, int cx, int cy)
 {
-    if (g_hwndChild) {
-        MoveWindow(g_hwndChild, 0, 0, cx, cy, TRUE);
-    }
 }
 
 /*
@@ -33,6 +31,17 @@ OnSize(HWND hwnd, UINT state, int cx, int cy)
 BOOL
 OnCreate(HWND hwnd, LPCREATESTRUCT lpcs)
 {
+    g_hwndChild = CreateWindow(TEXT("button"), TEXT("&1"),
+                               WS_CHILD | WS_VISIBLE |
+                               WS_TABSTOP | BS_PUSHBUTTON,
+                               0, 0, 100, 100,
+                               hwnd, nullptr, g_hinst, 0);
+    g_hwndChild2 = CreateWindow(TEXT("button"), TEXT("&2"),
+                                WS_CHILD | WS_VISIBLE |
+                                WS_TABSTOP | BS_PUSHBUTTON,
+                                100, 0, 100, 100,
+                                hwnd, nullptr, g_hinst, 0);
+
     return TRUE;
 }
 
@@ -150,6 +159,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE hinstPrev,
         ShowWindow(hwnd, nShowCmd);
 
         while (GetMessage(&msg, NULL, 0, 0)) {
+            if (IsDialogMessage(hwnd, &msg)) continue;
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
