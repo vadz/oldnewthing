@@ -14,10 +14,19 @@ HINSTANCE g_hinst;                          /* This application's HINSTANCE */
 HWND g_hwndChild;                           /* Optional child window */
 HWND g_hwndChild2;
 
+HWND g_hwndLastFocus;
 void OnActivate(HWND hwnd, UINT state, HWND hwndActDeact, BOOL fMinimized)
 {
-    if (state != WA_INACTIVE && !fMinimized) {
-        SetFocus(g_hwndChild);
+    if (!fMinimized) {
+        if (state == WA_INACTIVE) {
+            HWND hwndFocus = GetFocus();
+            if (hwndFocus && IsChild(hwnd, hwndFocus)) {
+                g_hwndLastFocus = hwndFocus;
+            }
+        }
+        else {
+            SetFocus(g_hwndLastFocus ? g_hwndLastFocus : g_hwndChild);
+        }
     }
 }
 
